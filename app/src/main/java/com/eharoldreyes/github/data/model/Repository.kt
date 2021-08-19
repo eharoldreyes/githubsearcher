@@ -6,5 +6,6 @@ data class Repository(
     val forks: String,
     val openIssues: String,
     val watchers: String,
+    val htmlUrl: String,
     val owner: Owner
 )

@@ -11,12 +11,19 @@ import android.widget.SearchView
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import com.eharoldreyes.github.R
+import com.eharoldreyes.github.data.model.Repository
 import com.eharoldreyes.github.databinding.FragmentSearchBinding
 import com.eharoldreyes.github.util.viewBindingLifecycle
 import dagger.hilt.android.AndroidEntryPoint
+import android.net.Uri
+
+import android.content.Intent
+
+
+
 
 @AndroidEntryPoint
-class SearchFragment : Fragment(R.layout.fragment_search) {
+class SearchFragment : Fragment(R.layout.fragment_search), OnItemClickListener {
 
     private val viewModel by viewModels<SearchViewModel>()
     private var binding by viewBindingLifecycle<FragmentSearchBinding>()
@@ -26,7 +33,7 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
         setHasOptionsMenu(true)
         binding = FragmentSearchBinding.bind(view)
 
-        val adapter = GithubRepoItemAdapter()
+        val adapter = GithubRepoItemAdapter(this)
 
         with(binding) {
             githubRepositoryListView.adapter = adapter
@@ -77,6 +84,15 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
 
     companion object {
         const val INIT_SEARCH = "Github"
+    }
+
+    override fun onItemClicked(item: Repository) {
+        startActivity(
+            Intent(
+                Intent.ACTION_VIEW,
+                Uri.parse(item.htmlUrl)
+            )
+        )
     }
 
 }

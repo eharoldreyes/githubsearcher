@@ -10,7 +10,7 @@ import com.bumptech.glide.Glide
 import com.eharoldreyes.github.data.model.Repository
 import com.eharoldreyes.github.databinding.ItemRepositoryBinding
 
-class GithubRepoItemAdapter : ListAdapter<Repository, GithubRepoItemAdapter.ViewHolder>(diffUtil) {
+class GithubRepoItemAdapter(private val listener: OnItemClickListener) : ListAdapter<Repository, GithubRepoItemAdapter.ViewHolder>(diffUtil) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding =
@@ -24,6 +24,16 @@ class GithubRepoItemAdapter : ListAdapter<Repository, GithubRepoItemAdapter.View
 
     inner class ViewHolder(private val binding: ItemRepositoryBinding) :
         RecyclerView.ViewHolder(binding.root) {
+
+        init {
+            with(binding) {
+                root.setOnClickListener {
+                    val position = adapterPosition
+                    if (position != RecyclerView.NO_POSITION)
+                        listener.onItemClicked(getItem(position))
+                }
+            }
+        }
 
         @SuppressLint("SetTextI18n")
         fun bind(repositoryItem: Repository) =

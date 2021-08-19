@@ -6,5 +6,6 @@ class RepositoryDto (
     val forks: String,
     val open_issues: String,
     val watchers: String,
+    val html_url: String,
     val owner: OwnerDto
 )

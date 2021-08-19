@@ -9,6 +9,7 @@ fun RepositoryDto.transform() = Repository(
     forks = forks,
     openIssues = open_issues,
     watchers = watchers,
+    htmlUrl = html_url,
     owner = Owner(
         userName = this.owner.login,
         avatarUrl = this.owner.avatar_url
