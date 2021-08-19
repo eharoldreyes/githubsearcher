@@ -29,10 +29,17 @@ class SearchViewModel @Inject constructor(
     private val _githubRepositories = MutableLiveData<List<Repository>>()
     val githubRepositories: LiveData<List<Repository>> = _githubRepositories
 
+    private lateinit var lastSearch : String
+
     fun searchRepositories(queryString: String){
+        lastSearch = queryString
         launchRequestWithErrorHandling {
             _githubRepositories.value = repository.searchRepositories(queryString)
         }
+    }
+
+    fun refreshList() {
+        searchRepositories(lastSearch)
     }
 
     private fun launchRequestWithErrorHandling(

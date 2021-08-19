@@ -1,8 +1,13 @@
 package com.eharoldreyes.github.view.search
 
+import android.app.SearchManager
+import android.content.Context
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
 import androidx.fragment.app.Fragment
 import android.view.View
+import android.widget.SearchView
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import com.eharoldreyes.github.R
@@ -18,6 +23,7 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setHasOptionsMenu(true)
         binding = FragmentSearchBinding.bind(view)
 
         val adapter = GithubRepoItemAdapter()
@@ -25,7 +31,7 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
         with(binding) {
             githubRepositoryListView.adapter = adapter
             githubRepositorySwipeRefreshLayout.setOnRefreshListener {
-                viewModel.searchRepositories("Moover") //TODO get search edit text value
+                viewModel.refreshList()
             }
         }
 
@@ -40,7 +46,37 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
                 Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
             }
 
-            searchRepositories("Moover") //TODO get search edit text value
+            searchRepositories(INIT_SEARCH)
         }
     }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_search, menu)
+        val searchItem = menu.findItem(R.id.search)
+        val searchManager =
+            requireActivity().getSystemService(Context.SEARCH_SERVICE) as SearchManager
+        val searchView = searchItem.actionView as SearchView
+
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(requireActivity().componentName))
+
+        val queryTextListener = object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                query?.let {
+                    viewModel.searchRepositories(it)
+                }
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean = true
+        }
+
+        searchView.setOnQueryTextListener(queryTextListener)
+
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    companion object {
+        const val INIT_SEARCH = "Github"
+    }
+
 }

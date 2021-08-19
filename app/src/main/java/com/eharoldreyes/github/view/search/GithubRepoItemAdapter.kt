@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.eharoldreyes.github.data.model.Repository
 import com.eharoldreyes.github.databinding.ItemRepositoryBinding
 
@@ -33,6 +34,10 @@ class GithubRepoItemAdapter : ListAdapter<Repository, GithubRepoItemAdapter.View
                     forkText.text = "$forks Forks"
                     openIssuesText.text = "$openIssues Open Issues"
                     watchersText.text = "$watchers Watchers"
+                    Glide.with(binding.root.context)
+                        .load(owner.avatarUrl)
+                        .override(120, 120)
+                        .into(binding.userAvatar)
                 }
             }
     }
